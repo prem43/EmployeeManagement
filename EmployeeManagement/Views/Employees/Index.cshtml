@@ -1,0 +1,298 @@
+@model EmployeeManagement.ViewModels.EmployeeListViewModel
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<!-- Enhanced header with better styling and gradient title -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="dashboard-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="dashboard-title" style="font-size: 2.5rem;">Employees</h1>
+                    <p class="dashboard-subtitle">Manage your workforce efficiently</p>
+                </div>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-user-plus me-2"></i>Add Employee
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced search and filter section with better placeholders -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-search me-2"></i>Search & Filter</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="searchTerm" class="form-label">Search Employees</label>
+                    <input type="text" class="form-control" id="searchTerm" name="searchTerm" 
+                           value="@Model.SearchTerm" placeholder="Search by name or email address...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="department" class="form-label">Filter by Department</label>
+                    <select class="form-select" id="department" name="department">
+                        <option value="">All Departments</option>
+                        @foreach (var dept in ViewBag.Departments as List<string>)
+                        {
+                            <option value="@dept" selected="@(dept == Model.Department)">@dept</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="isActive" class="form-label">Filter by Status</label>
+                    <select class="form-select" id="isActive" name="isActive">
+                        <option value="">All Status</option>
+                        <option value="true" selected="@(Model.IsActive == true)">Active Only</option>
+                        <option value="false" selected="@(Model.IsActive == false)">Inactive Only</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary" title="Apply Filters">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary" title="Clear Filters">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Results Summary -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <p class="text-muted mb-0">
+                <i class="fas fa-info-circle me-1"></i>
+                Showing <strong>@Model.Employees.Count</strong> of <strong>@Model.TotalCount</strong> employees
+                @if (!string.IsNullOrEmpty(Model.SearchTerm) || !string.IsNullOrEmpty(Model.Department) || Model.IsActive.HasValue)
+                {
+                    <span class="badge bg-primary ms-2">Filtered</span>
+                }
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Employee Table -->
+<div class="card">
+    <div class="card-body p-0">
+        @if (Model.Employees.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user me-2"></i>Employee</th>
+                            <th><i class="fas fa-envelope me-2"></i>Contact</th>
+                            <th><i class="fas fa-building me-2"></i>Department</th>
+                            <th><i class="fas fa-briefcase me-2"></i>Position</th>
+                            <th><i class="fas fa-calendar me-2"></i>Hire Date</th>
+                            <th><i class="fas fa-dollar-sign me-2"></i>Salary</th>
+                            <th><i class="fas fa-toggle-on me-2"></i>Status</th>
+                            <th><i class="fas fa-cogs me-2"></i>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var employee in Model.Employees)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-3">
+                                            @employee.FirstName.Substring(0, 1)@employee.LastName.Substring(0, 1)
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-primary">@employee.FullName</div>
+                                            <small class="text-muted">ID: #@employee.Id.ToString("D4")</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="text-primary">@employee.Email</div>
+                                        <small class="text-muted">@employee.Phone</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge" style="background-color: var(--accent-color); color: white;">
+                                        @employee.Department
+                                    </span>
+                                </td>
+                                <td>@employee.Position</td>
+                                <td>@employee.HireDate.ToString("MMM dd, yyyy")</td>
+                                <td class="text-success fw-bold">$@employee.Salary.ToString("N0")</td>
+                                <td>
+                                    @if (employee.IsActive)
+                                    {
+                                        <span class="badge" style="background-color: var(--success-color); color: var(--primary-bg);">
+                                            <i class="fas fa-check-circle me-1"></i>Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-times-circle me-1"></i>Inactive
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@employee.Id" 
+                                           class="btn btn-sm btn-outline-secondary" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@employee.Id" 
+                                           class="btn btn-sm btn-outline-secondary" title="Edit Employee">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form asp-action="ToggleStatus" asp-route-id="@employee.Id" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary" 
+                                                    title="@(employee.IsActive ? "Deactivate Employee" : "Activate Employee")">
+                                                <i class="fas fa-@(employee.IsActive ? "user-times" : "user-check")"></i>
+                                            </button>
+                                        </form>
+                                        <a asp-action="Delete" asp-route-id="@employee.Id" 
+                                           class="btn btn-sm btn-outline-danger" title="Delete Employee">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-users fa-4x" style="color: var(--text-secondary);"></i>
+                </div>
+                <h4 class="text-primary mb-3">No employees found</h4>
+                <p class="text-muted mb-4">
+                    @if (!string.IsNullOrEmpty(Model.SearchTerm) || !string.IsNullOrEmpty(Model.Department) || Model.IsActive.HasValue)
+                    {
+                        <span>Try adjusting your search criteria or clear the filters.</span>
+                    }
+                    else
+                    {
+                        <span>Get started by adding your first employee to the system.</span>
+                    }
+                </p>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-user-plus me-2"></i>Add First Employee
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Employee pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            @if (Model.Page > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" 
+                       asp-route-searchTerm="@Model.SearchTerm" 
+                       asp-route-department="@Model.Department" 
+                       asp-route-isActive="@Model.IsActive" 
+                       asp-route-page="@(Model.Page - 1)">
+                        <i class="fas fa-chevron-left me-1"></i>Previous
+                    </a>
+                </li>
+            }
+            
+            @for (int i = Math.Max(1, Model.Page - 2); i <= Math.Min(Model.TotalPages, Model.Page + 2); i++)
+            {
+                <li class="page-item @(i == Model.Page ? "active" : "")">
+                    <a class="page-link" asp-action="Index" 
+                       asp-route-searchTerm="@Model.SearchTerm" 
+                       asp-route-department="@Model.Department" 
+                       asp-route-isActive="@Model.IsActive" 
+                       asp-route-page="@i">@i</a>
+                </li>
+            }
+            
+            @if (Model.Page < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" 
+                       asp-route-searchTerm="@Model.SearchTerm" 
+                       asp-route-department="@Model.Department" 
+                       asp-route-isActive="@Model.IsActive" 
+                       asp-route-page="@(Model.Page + 1)">
+                        Next<i class="fas fa-chevron-right ms-1"></i>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+
+<style>
+.avatar-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.avatar-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 112, 243, 0.3);
+}
+
+.table-dark tbody tr:hover {
+    background-color: var(--hover-bg);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.pagination .page-link {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 8px;
+    margin: 0 2px;
+    font-weight: 500;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--hover-bg);
+    border-color: var(--accent-color);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 112, 243, 0.3);
+}
+</style>

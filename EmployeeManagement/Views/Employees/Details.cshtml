@@ -1,0 +1,115 @@
+@model EmployeeManagement.Models.Employee
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-user me-2"></i>Employee Details</h4>
+                <div>
+                    @if (Model.IsActive)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactive</span>
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Full Name</label>
+                            <p class="form-control-plaintext">@Model.FullName</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <p class="form-control-plaintext">
+                                <a href="mailto:@Model.Email" class="text-decoration-none">@Model.Email</a>
+                            </p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Phone</label>
+                            <p class="form-control-plaintext">
+                                @if (!string.IsNullOrEmpty(Model.Phone))
+                                {
+                                    <a href="tel:@Model.Phone" class="text-decoration-none">@Model.Phone</a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not provided</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Department</label>
+                            <p class="form-control-plaintext">@Model.Department</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Position</label>
+                            <p class="form-control-plaintext">@Model.Position</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Hire Date</label>
+                            <p class="form-control-plaintext">@Model.HireDate.ToString("MMMM dd, yyyy")</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Salary</label>
+                            <p class="form-control-plaintext">$@Model.Salary.ToString("N2")</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Employee ID</label>
+                            <p class="form-control-plaintext">#@Model.Id</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Created Date</label>
+                            <p class="form-control-plaintext text-muted">@Model.CreatedDate.ToString("MMMM dd, yyyy 'at' h:mm tt")</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Last Updated</label>
+                            <p class="form-control-plaintext text-muted">
+                                @if (Model.UpdatedDate.HasValue)
+                                {
+                                    @Model.UpdatedDate.Value.ToString("MMMM dd, yyyy 'at' h:mm tt")
+                                }
+                                else
+                                {
+                                    <span>Never updated</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    <div>
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">
+                            <i class="fas fa-edit me-2"></i>Edit
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                            <i class="fas fa-trash me-2"></i>Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
