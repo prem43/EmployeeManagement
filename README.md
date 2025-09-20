@@ -26,7 +26,7 @@ A comprehensive Employee Management System built with ASP.NET Core MVC, Entity F
    - Open `appsettings.json`
    - Replace the password in the connection string:
    \`\`\`json
-   "DefaultConnection": "Server=PREM-JII\\SQLEXPRESS;Database=EmployeeManagementDb;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=true;"
+   "DefaultConnection": "Server=....;Database=....;User Id=..;Password=YOUR_PASSWORD;TrustServerCertificate=true;"
    \`\`\`
 
 2. **Run Database Scripts**:
@@ -41,30 +41,10 @@ A comprehensive Employee Management System built with ASP.NET Core MVC, Entity F
    - .NET 8.0 SDK
    - SQL Server Express
 
-2. **Installation**:
-   - Open `EmployeeManagement.sln` in Visual Studio
-   - Update the connection string password in `appsettings.json`
-   - Run the database scripts in order
-   - Build and run the project
-
-3. **First Run**:
+2. **First Run**:
    - The application will start with sample employee data
    - Navigate to the dashboard to see overview statistics
    - Use the Employees section to manage workforce data
-
-## Project Structure
-
-\`\`\`
-EmployeeManagement/
-├── Controllers/           # MVC Controllers
-├── Models/               # Data Models
-├── ViewModels/           # View Models for forms
-├── Views/                # Razor Views
-├── Services/             # Business Logic Layer
-├── Data/                 # Entity Framework Context
-├── wwwroot/              # Static files (CSS, JS, images)
-└── scripts/              # Database setup scripts
-\`\`\`
 
 ## Key Features
 
@@ -94,16 +74,6 @@ EmployeeManagement/
 - Professional typography and spacing
 
 ## Database Schema
-
-### Employees Table
-- `Id` (Primary Key)
-- `FirstName`, `LastName`
-- `Email` (Unique)
-- `Phone`
-- `Department`, `Position`
-- `HireDate`, `Salary`
-- `IsActive` (Status)
-- `CreatedDate`, `UpdatedDate`
 
 ## Contributing
 
